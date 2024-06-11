@@ -1,0 +1,25 @@
+/* Login.css */
+.login-background {
+    background-image: url('./../../../public/login_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  h2 {
+    color: #000; /* Cor do título */
+  }
+  
+  .form-label, .form-control, .btn, .text-center a {
+    color: #000;
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+  }
+  

@@ -1,0 +1,17 @@
+export const mock = {
+  name: "Fernando",
+  lastname: "Brum",
+  cpf: "12345678912",
+  email: "teste@teste.com",
+  phone: "5544998525",
+  password: "senha teste",
+  confirmPassword: "senha teste",
+  zipcode: "",
+  street: "",
+  number: "",
+  complement: "",
+  neighborhood: "",
+  city: "",
+  state: "",
+  country: "",
+};
