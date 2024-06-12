@@ -2,42 +2,44 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 
-import { api } from "../../services/api";
+import { api, apiRoutes } from "../../services/api";
 
 import Logo from "../../components/Logo/Logo";
+import SignUpModal from "../../components/SignUpModal/SignUpModal";
 
 import "./styles.css";
-import SignUpModal from "../../components/SignUpModal/SignUpModal";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{
     username: boolean;
-    password: boolean;
-  }>({ username: false, password: false });
+  }>({ username: false });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!username || !password) {
-      setErrors({ username: !username, password: !password });
+    if (!username) {
+      setErrors({ username: !username });
       return;
     }
 
     try {
-      const response = await api.post("/login", { username, password });
+      const response = await api.post(apiRoutes.auth.forgotPassword, {
+        username,
+      });
 
       if (response.status === 200) {
-        navigate("/dashboard");
+        setSuccessMessage("E-mail enviado");
+        return;
       } else {
-        setErrorMessage("Error logging in. Please check your credentials.");
+        setErrorMessage("Erro ao recuperar senha.");
       }
     } catch (error) {
-      setErrorMessage("Error logging in. Please try again later.");
+      setErrorMessage("Erro ao recuperar senha");
     }
   };
 
@@ -52,6 +54,9 @@ const Login = () => {
           >
             <Logo />
 
+            {successMessage && (
+              <Alert variant="success">{successMessage}</Alert>
+            )}
             {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="username">

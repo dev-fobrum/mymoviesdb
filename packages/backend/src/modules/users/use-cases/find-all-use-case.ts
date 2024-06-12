@@ -10,7 +10,6 @@ export class FindAllUseCase {
 
   async execute(): Promise<IUser[]> {
     const users = await UserEntity.findAll();
-    console.log(users);
     return users;
   }
 }

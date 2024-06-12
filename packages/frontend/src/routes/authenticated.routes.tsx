@@ -1,6 +1,4 @@
-import useAuthStore from "../hooks/auth.store";
-
-import Dashboard from "../pages/private/Dashboard";
+import Dashboard from "../pages/private/Dashboard/Dashboard";
 
 export const authenticatedRoutes = [
   {
@@ -11,9 +9,3 @@ export const authenticatedRoutes = [
     menu: true,
   },
 ];
-
-export const menus = authenticatedRoutes.filter(
-  (route) =>
-    route?.menu &&
-    useAuthStore.getState().menus.find((r: any) => r == route?.path)
-);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 
-import { api } from "../../services/api";
+import { api, apiRoutes } from "../../services/api";
 
 import Logo from "../../components/Logo/Logo";
 import SignUpModal from "../../components/SignUpModal/SignUpModal";
@@ -29,15 +29,18 @@ const Login = () => {
     }
 
     try {
-      const response = await api.post("/login", { username, password });
+      const response = await api.post(apiRoutes.auth.login, {
+        username,
+        password,
+      });
 
       if (response.status === 200) {
         navigate("/dashboard");
       } else {
-        setErrorMessage("Error logging in. Please check your credentials.");
+        setErrorMessage("Erro ao realizar login. Tente novamente mais tarde");
       }
     } catch (error) {
-      setErrorMessage("Error logging in. Please try again later.");
+      setErrorMessage("Erro ao realizar login. Tente novamente mais tarde");
     }
   };
 
