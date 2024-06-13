@@ -1,21 +1,17 @@
-import { useEffect, useState, Suspense } from "react";
-import { useDispatch } from "react-redux";
-import { Container, Row, Col, DropdownButton, Dropdown } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 
 import { api, apiRoutes } from "../../../services/api";
-import { logout } from "../../../store/slice";
 
-import Logo from "../../../components/Logo/Logo";
+import GenreChips from "../../../components/GenreChips/GenreChips";
+import MoviesCarrossel from "../../../components/MoviesCarrossel/MoviesCarrossel";
+import MoviesGrid from "../../../components/MoviesGrid/MoviesGrid";
+import SearchTools from "../../../components/SearchTools/SearchTools";
 
 import "./styles.css";
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
   const [data, setData] = useState(null);
-
-  const handleLogout = () => {
-    dispatch(logout());
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -27,24 +23,17 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <Suspense>
-      <Container className="navbar-header">
-        <Row className="flex justify-content-end">
-          <Col>
-            <Logo width={50} height={50} />
-          </Col>
-          <Col>Favoritos</Col>
-          <Col>
-            <DropdownButton id="dropdown-item-button" title="Minha conta">
-              <Dropdown.Item as="button">Configurações</Dropdown.Item>
-              <Dropdown.Item as="button" onClick={handleLogout}>
-                Sair
-              </Dropdown.Item>
-            </DropdownButton>
-          </Col>
-        </Row>
-      </Container>
-    </Suspense>
+    <Container>
+      <SearchTools />
+
+      <GenreChips />
+
+      <MoviesGrid title="Destaques" />
+
+      <MoviesCarrossel title="Favoritos" seeAllLink={"/favorites"} />
+
+      <MoviesCarrossel title="Visto Recentemente" />
+    </Container>
   );
 };
 

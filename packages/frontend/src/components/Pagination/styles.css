@@ -1,0 +1,20 @@
+/* .movie-pagination {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+  } */
+  
+  .movie-pagination .page-item .page-link {
+    color: rgb(40, 44, 52);
+    background-color: #FFF;
+    border: 1px solid #dee2e6;
+    margin: 0 5px;
+  }
+  
+  .movie-pagination .page-item.active .page-link {
+    z-index: 1;
+    color: #FFF;
+    background-color: rgba(97, 218, 251, 0.7);
+    border-color: #FFF;
+  }
+  

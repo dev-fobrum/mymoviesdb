@@ -27,26 +27,30 @@ export class LoginUseCase {
   }
 
   async execute(body: LoginDto): Promise<any> {
-    const { username, password } = body;
-    const user = await this.userRepository.findUser(username);
+    try {
+      const { username, password } = body;
+      const user = await this.userRepository.findUser(username);
 
-    if (!user) {
-      throw new Error("Usuário não encontrado");
+      if (!user) {
+        throw new Error("Usuário não encontrado");
+      }
+
+      const validPassword = await this.comparePassword(password, user.password);
+
+      if (!validPassword) {
+        throw new Error("Senha inválida");
+      }
+
+      const token = this.generateToken(user);
+
+      return {
+        userId: user.id,
+        name: user.name,
+        lastName: user.lastname,
+        token,
+      };
+    } catch (error: any) {
+      throw new Error(error);
     }
-
-    const validPassword = this.comparePassword(password, user.password);
-
-    if (!validPassword) {
-      throw new Error("Senha inválida");
-    }
-
-    const token = this.generateToken(user);
-
-    return {
-      userId: user.id,
-      name: user.name,
-      lastName: user.lastname,
-      token,
-    };
   }
 }

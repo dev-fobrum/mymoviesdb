@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { api } from "../services/api";
 
 const initialState = {
-  auth: {
+  credentials: {
+    name: null,
+    lastName: null,
     user: null,
+    token: null,
     isAuthenticated: false,
   },
-  menus: [],
 };
 
 const authSlice = createSlice({
@@ -14,25 +15,24 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action) {
-      state.auth = {
+      state.credentials = {
         ...action.payload,
+        token: action.payload.token,
         isAuthenticated: true,
       };
-      state.menus = action.payload.menus;
     },
     logout(state) {
-      // await api.post("/auth/logout");
-      state.auth = {
+      state.credentials = {
+        name: null,
+        lastName: null,
         user: null,
+        token: null,
         isAuthenticated: false,
       };
-      state.menus = [];
     },
   },
 });
 
-// Exporta as ações geradas pelo slice
 export const { login, logout } = authSlice.actions;
 
-// Exporta o redutor do slice
 export default authSlice.reducer;

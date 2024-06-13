@@ -10,8 +10,13 @@ export class UserController {
   private createUserUseCase: CreateUserUseCase = new CreateUserUseCase();
 
   async findAll(req: Request, res: Response): Promise<any> {
-    const users = await this.findAllUseCase.execute();
-    res.json(users);
+    try {
+      const users = await this.findAllUseCase.execute();
+      res.json(users);
+    } catch (error: any) {
+      console.error("Error finding user:", error);
+      res.status(500).json({ error: error?.message });
+    }
   }
 
   async create(req: Request, res: Response): Promise<any> {
@@ -21,9 +26,9 @@ export class UserController {
       const user = await this.createUserUseCase.execute(body);
 
       res.json(user);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating user:", error);
-      res.status(500).json({ error: "Error creating user" });
+      res.status(500).json({ error: error?.message });
     }
   }
 }

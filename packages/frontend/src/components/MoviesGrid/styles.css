@@ -1,0 +1,50 @@
+.prev-icon,
+.next-icon {
+  position: absolute;
+  transform: translateY(-50%);
+  color: rgb(40, 44, 52);
+  background-color: rgb(97, 218, 251);
+  padding: 10px;
+  border-radius: 20%;
+  cursor: pointer;
+  font-size: 20px;
+  width: 30px;
+}
+
+.carousel-control-next, .carousel-control-prev {
+  width: 0;
+}
+
+.prev-icon {
+  left: -50px;
+}
+
+.next-icon {
+  right: -50px;
+}
+
+.movie-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    color: rgb(40, 44, 52);
+    background-color: rgba(97, 218, 251, 0.7);
+    width: 100%;
+    font-weight: 500;
+    padding: 5px;
+}
+
+.movie-title {
+    padding-bottom: 5px;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}

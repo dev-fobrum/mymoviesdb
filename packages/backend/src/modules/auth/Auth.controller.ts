@@ -12,21 +12,29 @@ export class AuthController {
     new RecoverPasswordUseCase();
 
   async login(req: Request, res: Response): Promise<any> {
-    const body: LoginDto = req.body;
-    const credentials = await this.loginUseCase.execute(body);
+    try {
+      const body: LoginDto = req.body;
+      const credentials = await this.loginUseCase.execute(body);
 
-    res.header("Authorization", credentials.token).send(credentials);
+      res.header("Authorization", credentials.token).send(credentials);
+    } catch (error: any) {
+      res.status(500).json({ error: error?.message });
+    }
   }
 
   async forgotPassword(req: Request, res: Response): Promise<any> {
-    const body: ForgotPasswordDto = req.body;
+    try {
+      const body: ForgotPasswordDto = req.body;
 
-    const user = await this.recoverPasswordUseCase.execute(body);
+      const user = await this.recoverPasswordUseCase.execute(body);
 
-    if (!user) {
-      res.send("Não foi possível recuperar a senha").status(404);
+      if (!user) {
+        res.send("Não foi possível recuperar a senha").status(404);
+      }
+
+      res.send("E-mail enviado");
+    } catch (error: any) {
+      res.status(500).json({ error: error?.message });
     }
-
-    res.send("E-mail enviado");
   }
 }

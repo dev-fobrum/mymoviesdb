@@ -1,8 +1,6 @@
 import axios from "axios";
 import { store } from "../store";
-import { login, logout } from "../store/slice";
-
-import useAuthStore from "../hooks/auth.store";
+import { login, logout } from "../store/authSlice";
 
 export const api = axios.create({
   baseURL: "http://localhost:3001",
@@ -15,7 +13,7 @@ api.interceptors.request.use(
   (config: any) => {
     const user = store.getState();
 
-    config.headers.Authorization = `${user.auth.auth.token}`;
+    config.headers.Authorization = `${user.auth.credentials.token}`;
 
     return config;
   },

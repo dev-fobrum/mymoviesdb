@@ -6,9 +6,10 @@ import { guestRoutes } from "./public.routes";
 
 import GuestLayout from "../layouts/GuestLayout";
 import MainLayout from "../layouts/MainLayout";
+import Layout from "../pages/private/Layout/Layout";
 
 const Router = () => {
-  const auth = useSelector((state: any) => state.auth.auth);
+  const auth = useSelector((state: any) => state.auth.credentials);
 
   const isAuthenticated = auth.isAuthenticated;
 
@@ -30,7 +31,7 @@ const Router = () => {
             <Route
               key={`route-${idx}`}
               path={`/${route.path}`}
-              element={route.element}
+              element={<Layout>{route.element}</Layout>}
             />
           ))}
       </Route>

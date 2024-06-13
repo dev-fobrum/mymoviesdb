@@ -1,3 +1,18 @@
-.navbar-header {
-    background-color: gray;
+.filter-btn .dropdown-toggle {
+    color: rgb(97, 218, 251);
+    background-color: rgb(40, 44, 52);
+    border-color: rgb(97, 218, 251);
+  }
+  
+  .filter-btn .dropdown-toggle:hover,
+  .filter-btn .dropdown-toggle:focus,
+  .filter-btn .dropdown-toggle:active {
+    color:rgb(40, 44, 52);
+    background-color: rgb(97, 218, 251);
+    border-color: rgb(40, 44, 52);
+  }
+
+.section-title {
+    color: rgb(97, 218, 251);
+    font-weight: 400;
 }

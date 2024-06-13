@@ -1,3 +1,24 @@
 .btn {
   color: #FFF;
 }
+
+body{
+  background-color: rgb(40, 44, 52);;
+  font-family: 'Ubuntu';
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.theme-btn {
+  color: rgb(97, 218, 251);
+  background-color: rgb(40, 44, 52);
+  border-color: rgb(97, 218, 251);
+}
+
+.theme-btn:hover {
+  color: rgb(40, 44, 52);
+  background-color: rgb(97, 218, 251);
+  border-color: rgb(40, 44, 52);
+}
