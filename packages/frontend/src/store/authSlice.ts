@@ -1,4 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+
+import { clearFilters, clearFavoritesFilters } from "./filtersSlice";
 
 const initialState = {
   credentials: {

@@ -1,36 +1,27 @@
-import React, { ChangeEvent, useState } from "react";
-import { Modal, Button, Form, Col, Row } from "react-bootstrap";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Modal, Button, Form, Col, Row, Alert } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
 // import InputMask from "react-input-mask";
 
 import { api, apiRoutes } from "../../services/api";
 
 import "./styles.css";
 import IIBGEData from "./IBGEData.interface";
-import { mock } from "./mock";
+import { mock, DEFAULT_USER_INFO } from "./mock";
 
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const CreateUserModal = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pageName = location.pathname;
+
+  const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
-  const [formData, setFormData] = useState(mock);
-  // const [formData, setFormData] = useState({
-  //   name: "",
-  //   lastname: "",
-  //   cpf: "",
-  //   email: "",
-  //   phone: "",
-  //   password: "",
-  //   confirmPassword: "",
-  //   zipcode: "",
-  //   street: "",
-  //   number: "",
-  //   complement: "",
-  //   neighborhood: "",
-  //   city: "",
-  //   state: "",
-  //   country: "",
-  // });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // const [formData, setFormData] = useState(mock);
+  const [formData, setFormData] = useState(DEFAULT_USER_INFO);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -63,7 +54,7 @@ const CreateUserModal = () => {
       } else {
         console.error("Error fetching Zipcode");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching Zipcode:", error);
     }
   };
@@ -128,16 +119,21 @@ const CreateUserModal = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+      setErrorMessage(null);
+
       const response = await api.post(apiRoutes.users.create, {
         ...formData,
       });
 
-      console.log(response);
+      setLoading(false);
 
       if (response.status === 200) {
         handleClose();
       }
-    } catch (error) {
+    } catch (error: any) {
+      setLoading(false);
+      setErrorMessage(error.response.data.error);
       console.error("Error creating user: ", error);
     }
   };
@@ -162,7 +158,13 @@ const CreateUserModal = () => {
         </span>
       </div>
 
-      <Modal show={show} onHide={handleClose} animation={true}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        animation={true}
+        keyboard={!loading}
+        {...(loading ? { backdrop: "static" } : {})}
+      >
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Row className="row">
@@ -200,6 +202,7 @@ const CreateUserModal = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    autoComplete="off"
                     required
                   />
                 </Form.Group>
@@ -215,6 +218,7 @@ const CreateUserModal = () => {
                     value={formData.password}
                     onChange={handleChange}
                     onBlur={handlePassword}
+                    autoComplete="off"
                     required
                   />
                 </Form.Group>
@@ -228,6 +232,7 @@ const CreateUserModal = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     onBlur={handlePassword}
+                    autoComplete="off"
                     required
                   />
                 </Form.Group>
@@ -326,7 +331,6 @@ const CreateUserModal = () => {
                     name="complement"
                     value={formData.complement}
                     onChange={handleChange}
-                    required
                   />
                 </Form.Group>
               </Col>
@@ -393,14 +397,44 @@ const CreateUserModal = () => {
             </Row>
 
             <Row className="mt-4">
-              <Button variant="primary" type="submit">
-                Cadastrar
+              <Button variant="primary" type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>{" "}
+                    Enviando informações
+                  </>
+                ) : (
+                  <>Cadastrar</>
+                )}
               </Button>
+            </Row>
+            <Row>
+              <Col>
+                {errorMessage && (
+                  <Alert className="mt-2" variant="danger">
+                    <div>{errorMessage}</div>
+                    <div
+                      className="cursor-pointer"
+                      onClick={() =>
+                        pageName === "/forgotpassword"
+                          ? handleClose()
+                          : navigate("/forgotpassword")
+                      }
+                    >
+                      Recuperar senha?
+                    </div>
+                  </Alert>
+                )}
+              </Col>
             </Row>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose} disabled={loading}>
             Cancelar
           </Button>
         </Modal.Footer>

@@ -1,0 +1,14 @@
+.page-movie-details ,
+.page-movie-details h2    {
+    color: rgb(97, 218, 251);
+}
+
+
+.page-my-reviews .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-my-reviews .card-text.flex-grow-1 {
+    flex-grow: 1;
+}

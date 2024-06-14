@@ -1,15 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { FaHeart, FaUser } from "react-icons/fa";
+import { FaHeart, FaPencilAlt, FaUser } from "react-icons/fa";
 
 import Logo from "../Logo/Logo";
 
 import { logout } from "../../store/authSlice";
 
 import "./styles.css";
+import { FC } from "react";
 
-const NavbarComponent = () => {
+interface NavbarComponentProps {
+  pageName?: string;
+}
+
+const NavbarComponent: FC<NavbarComponentProps> = ({ pageName }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -39,11 +44,26 @@ const NavbarComponent = () => {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#Destaques">Destaques</Nav.Link>
-              <Nav.Link href="#Favoritos">Favoritos</Nav.Link>
-              <Nav.Link href="#Visto Recentemente">Visto Recentemente</Nav.Link>
+              {pageName === "/dashboard" ? (
+                <>
+                  <Nav.Link href="#Destaques">Destaques</Nav.Link>
+                  <Nav.Link href="#Favoritos">Favoritos</Nav.Link>
+                  <Nav.Link href="#Visto Recentemente">
+                    Visto Recentemente
+                  </Nav.Link>
+                </>
+              ) : (
+                <Nav.Link onClick={() => navigate("/dashboard")}>
+                  Início
+                </Nav.Link>
+              )}
             </Nav>
             <Nav>
+              <Nav.Link onClick={() => navigate("/reviews")}>
+                <div className="round-cover">
+                  <FaPencilAlt />
+                </div>
+              </Nav.Link>
               <Nav.Link onClick={() => navigate("/favorites")}>
                 <div className="round-cover">
                   <FaHeart />

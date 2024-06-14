@@ -15,3 +15,21 @@ export const mock = {
   state: "",
   country: "",
 };
+
+export const DEFAULT_USER_INFO = {
+  name: "",
+  lastname: "",
+  cpf: "",
+  email: "",
+  phone: "",
+  password: "",
+  confirmPassword: "",
+  zipcode: "",
+  street: "",
+  number: "",
+  complement: "",
+  neighborhood: "",
+  city: "",
+  state: "",
+  country: "",
+};

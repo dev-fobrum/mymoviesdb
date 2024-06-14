@@ -6,6 +6,9 @@ import { IUserRepository } from "../interfaces/UserRepository.interface";
 
 import { UserRepository } from "../repositories/UserRepository";
 
+import { enviarEmailBoasVindas } from "../../../mailer/mailer";
+import { create } from "domain";
+
 export class CreateUserUseCase {
   private userRepository: IUserRepository = new UserRepository();
 
@@ -17,17 +20,26 @@ export class CreateUserUseCase {
   }
 
   async execute(body: CreateUserDto): Promise<IUser> {
-    const findUser = await this.userRepository.findByEmail(body.email);
+    const findUser = await this.userRepository.findByUniqConstraint(
+      body.email,
+      parseInt(body.cpf)
+    );
 
     if (findUser) {
-      throw new Error(
-        `User cannot be created: ${body.email} already in database`
-      );
+      throw new Error(`Erro: usuário já cadastrado`);
     }
 
-    return this.userRepository.create({
+    const created = await this.userRepository.create({
       ...body,
       password: await this.hashPassword(body.password),
     });
+
+    try {
+      await enviarEmailBoasVindas(body.email);
+    } catch (error) {
+      console.error("Erro ao enviar email de boas-vindas:", error);
+    } finally {
+      return created;
+    }
   }
 }

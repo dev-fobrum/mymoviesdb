@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 
 import { api, apiRoutes } from "../../services/api";
@@ -7,10 +8,13 @@ import { api, apiRoutes } from "../../services/api";
 import Logo from "../../components/Logo/Logo";
 import SignUpModal from "../../components/SignUpModal/SignUpModal";
 
+import { clearFilters, clearFavoritesFilters } from "../../store/filtersSlice";
+
 import "./styles.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +23,11 @@ const Login = () => {
     password: boolean;
   }>({ username: false, password: false });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    dispatch(clearFilters());
+    dispatch(clearFavoritesFilters());
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -9,7 +9,7 @@ export class FindAllUseCase {
   private userRepository: IUserRepository = new UserRepository();
 
   async execute(): Promise<IUser[]> {
-    const users = await UserEntity.findAll();
+    const users = await this.userRepository.findAll();
     return users;
   }
 }

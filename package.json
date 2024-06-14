@@ -8,11 +8,15 @@
     "packages/*"
   ],
   "scripts": {
-  "start:backend": "yarn workspace backend dev",
-  "start:frontend": "yarn workspace frontend start",
-  "start": "concurrently \"yarn start:backend\" \"yarn start:frontend\""
-},
-"devDependencies": {
-  "concurrently": "^7.0.0"
-}
+    "start:backend": "yarn workspace backend dev",
+    "start:frontend": "yarn workspace frontend start",
+    "start": "concurrently \"yarn start:backend\" \"yarn start:frontend\""
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.15",
+    "concurrently": "^7.0.0"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.13"
+  }
 }

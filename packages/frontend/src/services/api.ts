@@ -41,7 +41,9 @@ api.interceptors.response.use(
 
 export const apiRoutes = {
   users: {
+    findProfile: "findProfile",
     create: "users",
+    update: "users",
   },
   auth: {
     login: "/login",
@@ -49,5 +51,9 @@ export const apiRoutes = {
   },
   dashboard: {
     get: "dashboard",
+  },
+  movies: {
+    getAvaliation: "movies",
+    avaliate: "movies/avaliate",
   },
 };

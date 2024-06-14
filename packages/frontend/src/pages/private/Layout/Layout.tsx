@@ -13,13 +13,11 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const pageName = location.pathname; // Obtém o caminho atual
-
-  console.log("devlog pageName", pageName);
+  const pageName = location.pathname;
 
   return (
     <div>
-      <NavbarComponent />
+      <NavbarComponent pageName={pageName} />
       {pageName !== "/dashboard" && (
         <Row className="m-4">
           <Col>
@@ -37,7 +35,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Row>
       )}
       <>{children}</>
-      <Footer />
+      <Footer pageName={pageName} />
     </div>
   );
 };

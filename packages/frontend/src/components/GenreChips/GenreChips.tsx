@@ -1,14 +1,21 @@
+import { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Form, Row, Col } from "react-bootstrap";
 
 import CustomCheckbox from "./CustomCheckbox";
 
-import { setGenres } from "../../store/filtersSlice";
+import { setGenres, setFavoritesGenres } from "../../store/filtersSlice";
 
-const GenreFilter = () => {
+interface GenreFilterProps {
+  type: string;
+}
+
+const GenreFilter: FC<GenreFilterProps> = ({ type }) => {
   const dispatch = useDispatch();
-  const featuredFilters = useSelector(
-    (state: any) => state.filters.featuredFilters
+  const featuredFilters = useSelector((state: any) =>
+    type === "featured"
+      ? state.filters.featuredFilters
+      : state.filters.favoritesFilters
   );
 
   const handleGenreToggle = (genre: string) => {
@@ -16,7 +23,9 @@ const GenreFilter = () => {
       ? featuredFilters.genres.filter((item: string) => item !== genre)
       : [...featuredFilters.genres, genre];
 
-    dispatch(setGenres(updatedGenres));
+    type === "featured"
+      ? dispatch(setGenres(updatedGenres))
+      : dispatch(setFavoritesGenres(updatedGenres));
 
     return true;
   };

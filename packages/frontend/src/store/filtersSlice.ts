@@ -7,6 +7,12 @@ const initialState = {
     genres: [],
     currentPage: 1,
   },
+  favoritesFilters: {
+    q: "",
+    ordering: "Padrão",
+    genres: [],
+    currentPage: 1,
+  },
 };
 
 const filtersSlice = createSlice({
@@ -45,6 +51,39 @@ const filtersSlice = createSlice({
         currentPage: 1,
       };
     },
+
+    setFavoritesQuerySearch(state, action) {
+      state.favoritesFilters = {
+        ...state.favoritesFilters,
+        q: action.payload,
+      };
+    },
+    setFavoritesOrdering(state, action) {
+      state.favoritesFilters = {
+        ...state.favoritesFilters,
+        ordering: action.payload,
+      };
+    },
+    setFavoritesCurrentPage(state, action) {
+      state.favoritesFilters = {
+        ...state.favoritesFilters,
+        currentPage: action.payload,
+      };
+    },
+    setFavoritesGenres(state, action) {
+      state.favoritesFilters = {
+        ...state.favoritesFilters,
+        genres: action.payload,
+      };
+    },
+    clearFavoritesFilters(state) {
+      state.favoritesFilters = {
+        q: "",
+        ordering: "Padrão",
+        genres: [],
+        currentPage: 1,
+      };
+    },
   },
 });
 
@@ -54,6 +93,11 @@ export const {
   setCurrentPage,
   setGenres,
   clearFilters,
+  setFavoritesQuerySearch,
+  setFavoritesOrdering,
+  setFavoritesCurrentPage,
+  setFavoritesGenres,
+  clearFavoritesFilters,
 } = filtersSlice.actions;
 
 export default filtersSlice.reducer;

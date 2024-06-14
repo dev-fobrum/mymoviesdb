@@ -24,9 +24,9 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <SearchTools />
+      <SearchTools type="featured" />
 
-      <GenreChips />
+      <GenreChips type="featured" />
 
       <MoviesGrid title="Destaques" />
 

@@ -1,10 +1,17 @@
-import React, { ChangeEvent, useState } from "react";
-import { Col, Container, Row, Modal, Button, Form } from "react-bootstrap";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import {
+  Col,
+  Container,
+  Row,
+  Modal,
+  Button,
+  Form,
+  Alert,
+} from "react-bootstrap";
 
 import { api, apiRoutes } from "../../../services/api";
 
 import IIBGEData from "./IBGEData.interface";
-import { mock } from "./mock";
 
 import "./styles.css";
 
@@ -12,7 +19,45 @@ const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const Profile = () => {
-  const [formData, setFormData] = useState(mock);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    lastname: "",
+    cpf: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    zipcode: "",
+    street: "",
+    number: "",
+    complement: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+    country: "",
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+
+        const response = await api.get(apiRoutes.users.findProfile);
+
+        setLoading(false);
+        setFormData(response.data);
+      } catch (error) {
+        setLoading(false);
+        console.log("devlog error", error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   /**
    * Get IBGE data from Zipcode info
@@ -107,17 +152,23 @@ const Profile = () => {
     e.preventDefault();
 
     try {
-      const response = await api.post(apiRoutes.users.create, {
+      setSuccessMessage(null);
+      setErrorMessage(null);
+      setLoading(true);
+
+      const response = await api.put(apiRoutes.users.update, {
         ...formData,
       });
 
-      console.log(response);
+      setLoading(false);
 
       if (response.status === 200) {
-        console.log("success");
+        setSuccessMessage("Atualizado com sucesso");
       }
     } catch (error) {
-      console.error("Error creating user: ", error);
+      setErrorMessage("Erro ao atualizar usuário");
+      setLoading(false);
+      console.error("Error updating user: ", error);
     }
   };
 
@@ -165,7 +216,7 @@ const Profile = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                required
+                readOnly
               />
             </Form.Group>
           </Col>
@@ -180,7 +231,6 @@ const Profile = () => {
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={handlePassword}
-                required
               />
             </Form.Group>
           </Col>
@@ -193,7 +243,6 @@ const Profile = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 onBlur={handlePassword}
-                required
               />
             </Form.Group>
           </Col>
@@ -358,11 +407,37 @@ const Profile = () => {
         </Row>
 
         <Row className="mt-4">
-          <Button variant="primary" type="submit">
-            Cadastrar
+          <Button variant="primary theme-btn" type="submit">
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>{" "}
+                Enviando informações
+              </>
+            ) : (
+              <>Cadastrar</>
+            )}
           </Button>
         </Row>
       </Form>
+
+      {successMessage ? (
+        <Alert className="mt-2" variant="success">
+          <div>{successMessage}</div>
+        </Alert>
+      ) : (
+        <></>
+      )}
+      {errorMessage ? (
+        <Alert className="mt-2" variant="danger">
+          <div>{errorMessage}</div>
+        </Alert>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };

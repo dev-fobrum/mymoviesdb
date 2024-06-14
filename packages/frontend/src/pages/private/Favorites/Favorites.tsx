@@ -1,10 +1,19 @@
 import React from "react";
 
+import SearchTools from "../../../components/SearchTools/SearchTools";
+import GenreChips from "../../../components/GenreChips/GenreChips";
+import MoviesGrid from "../../../components/MoviesGrid/MoviesGrid";
+import { Container } from "react-bootstrap";
+
 const Favorites: React.FC = () => {
   return (
-    <div className="display-5 mt-4 mb-3 section-title">
-      <h1>Favorites</h1>
-    </div>
+    <Container>
+      <SearchTools type="favorites" />
+
+      <GenreChips type="favorites" />
+
+      <MoviesGrid title="Meus Favoritos" />
+    </Container>
   );
 };
 

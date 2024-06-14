@@ -1,20 +1,26 @@
 import UserEntity from "../entities/User.entity";
+import { Op } from "sequelize";
 
-import { IUser } from "../interfaces/User.interface";
 import { IUserRepository } from "../interfaces/UserRepository.interface";
 
 import { CreateUserDto } from "../dtos/createUser.dto";
-
-const users: IUser[] = [
-  { id: 1, name: "John Doe", email: "john@example.com" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com" },
-];
+import { UpdateUserDto } from "../dtos/updateUser.dto";
 
 export class UserRepository implements IUserRepository {
   async findAll(): Promise<UserEntity[]> {
     const users = await UserEntity.findAll();
 
     return users;
+  }
+
+  async findOne(userId: number): Promise<UserEntity | null> {
+    const allAttributes = Object.keys(UserEntity.getAttributes());
+
+    const user = await UserEntity.findByPk(userId, {
+      attributes: allAttributes.filter((attribute) => attribute !== "password"),
+    });
+
+    return user;
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -27,13 +33,42 @@ export class UserRepository implements IUserRepository {
     return user;
   }
 
+  async findByUniqConstraint(
+    email: string,
+    cpf: number
+  ): Promise<UserEntity | null> {
+    const user = await UserEntity.findOne({
+      where: {
+        [Op.or]: [{ email }, { cpf }],
+      },
+    });
+
+    return user;
+  }
+
   async create(body: CreateUserDto): Promise<UserEntity> {
-    const created = UserEntity.create({
+    const created = await UserEntity.create({
       ...body,
       created_at: new Date(),
       updated_at: new Date(),
     });
 
     return created;
+  }
+
+  async update(body: UpdateUserDto, userId: number): Promise<any> {
+    const update = await UserEntity.update(
+      {
+        ...body,
+        updated_at: new Date(),
+      },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
+    return update;
   }
 }

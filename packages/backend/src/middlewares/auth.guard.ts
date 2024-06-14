@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import { JwtPayload, VerifyErrors } from "jsonwebtoken";
+import RequestWithJwt from "../interfaces/RequestWithJwt.interface";
 
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
@@ -17,10 +19,15 @@ export const VerifyToken = (
   jwt.verify(
     token.replace("Bearer ", ""),
     process.env.SECRET_KEY,
-    (err: any) => {
+    (err: VerifyErrors | null, decoded: any) => {
       if (err) {
         return res.status(401).json({ message: "Token inválido" });
       }
+
+      console.log("devlog decoded", decoded);
+
+      (req as RequestWithJwt).userId = decoded?.id;
+
       next();
     }
   );

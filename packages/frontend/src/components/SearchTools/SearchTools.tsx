@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Container,
@@ -13,14 +14,22 @@ import {
   setQuerySearch,
   setOrdering,
   clearFilters,
+  setFavoritesQuerySearch,
+  setFavoritesOrdering,
+  clearFavoritesFilters,
 } from "../../store/filtersSlice";
-import { useEffect } from "react";
 
-const SearchTools = () => {
+interface SearchToolsProps {
+  type: string;
+}
+
+const SearchTools: FC<SearchToolsProps> = ({ type }) => {
   const dispatch = useDispatch();
 
-  const { q, ordering } = useSelector(
-    (state: any) => state.filters.featuredFilters
+  const { q, ordering } = useSelector((state: any) =>
+    type === "featured"
+      ? state.filters.featuredFilters
+      : state.filters.favoritesFilters
   );
 
   const handleSearch = () => {
@@ -31,7 +40,9 @@ const SearchTools = () => {
   const handleOrdenationChange = (e: string | null) => {
     if (!e) return;
 
-    dispatch(setOrdering(e));
+    type === "featured"
+      ? dispatch(setOrdering(e))
+      : dispatch(setFavoritesOrdering(e));
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -42,7 +53,9 @@ const SearchTools = () => {
   };
 
   const handleClearFilters = () => {
-    dispatch(clearFilters());
+    type === "featured"
+      ? dispatch(clearFilters())
+      : dispatch(clearFavoritesFilters());
   };
 
   return (
@@ -52,7 +65,11 @@ const SearchTools = () => {
           className="me-auto"
           placeholder="Pesquisar por título..."
           value={q}
-          onChange={(e) => dispatch(setQuerySearch(e.target.value))}
+          onChange={(e) =>
+            type === "featured"
+              ? dispatch(setQuerySearch(e.target.value))
+              : dispatch(setFavoritesQuerySearch(e.target.value))
+          }
           onKeyDown={handleKeyDown}
         />
         <Button
