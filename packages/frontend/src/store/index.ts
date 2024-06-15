@@ -1,3 +1,4 @@
+// index.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import { combineReducers } from "redux";
@@ -12,12 +13,14 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  auth: persistReducer(persistConfig, authReducer),
-  filters: persistReducer(persistConfig, filtersSlice),
+  auth: authReducer,
+  filters: filtersSlice,
 });
 
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
 });
 
 const persistor = persistStore(store);
