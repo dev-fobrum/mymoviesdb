@@ -18,6 +18,7 @@ import {
   setFavoritesOrdering,
   clearFavoritesFilters,
 } from "../../store/filtersSlice";
+import InputWithDebounce from "./InputWithDebounce";
 
 interface SearchToolsProps {
   type: string;
@@ -32,24 +33,12 @@ const SearchTools: FC<SearchToolsProps> = ({ type }) => {
       : state.filters.favoritesFilters
   );
 
-  const handleSearch = () => {
-    console.error("Not implemented");
-    // dispatch(performSearch(q));
-  };
-
   const handleOrdenationChange = (e: string | null) => {
     if (!e) return;
 
     type === "featured"
       ? dispatch(setOrdering(e))
       : dispatch(setFavoritesOrdering(e));
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleSearch();
-    }
   };
 
   const handleClearFilters = () => {
@@ -61,7 +50,8 @@ const SearchTools: FC<SearchToolsProps> = ({ type }) => {
   return (
     <Container className="mt-3">
       <Stack direction="horizontal" gap={3}>
-        <Form.Control
+        <InputWithDebounce type={type} />
+        {/* <Form.Control
           className="me-auto"
           placeholder="Pesquisar por título..."
           value={q}
@@ -70,9 +60,8 @@ const SearchTools: FC<SearchToolsProps> = ({ type }) => {
               ? dispatch(setQuerySearch(e.target.value))
               : dispatch(setFavoritesQuerySearch(e.target.value))
           }
-          onKeyDown={handleKeyDown}
-        />
-        <Button
+        /> */}
+        {/* <Button
           variant="secondary"
           className="theme-btn"
           onClick={handleSearch}
@@ -83,7 +72,7 @@ const SearchTools: FC<SearchToolsProps> = ({ type }) => {
               <FaSearch />
             </span>
           </div>
-        </Button>
+        </Button> */}
         <DropdownButton
           id="filter-btn"
           className="filter-btn"

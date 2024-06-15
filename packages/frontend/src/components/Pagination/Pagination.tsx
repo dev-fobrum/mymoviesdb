@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import Pagination from "react-bootstrap/Pagination";
 
-import { setCurrentPage } from "../../store/filtersSlice";
+import { setPage } from "../../store/filtersSlice";
 
 import "./styles.css";
 
@@ -24,7 +24,7 @@ const MoviesPagination: React.FC<MoviesPaginationProps> = ({
 }) => {
   const dispatch = useDispatch();
   const currentPage = useSelector(
-    (state: any) => state.filters.featuredFilters.currentPage
+    (state: any) => state.filters.featuredFilters.page
   );
 
   const pagesCount = Math.ceil(itemsCount / itemsPerPage);
@@ -33,7 +33,7 @@ const MoviesPagination: React.FC<MoviesPaginationProps> = ({
 
   const changePage = (number: number) => {
     if (currentPage === number) return;
-    dispatch(setCurrentPage(number));
+    dispatch(setPage(number));
     scrollToTop();
   };
 
@@ -51,7 +51,7 @@ const MoviesPagination: React.FC<MoviesPaginationProps> = ({
 
   const setLastPageAsCurrent = () => {
     if (currentPage > pagesCount) {
-      dispatch(setCurrentPage(pagesCount));
+      dispatch(setPage(pagesCount));
     }
   };
 

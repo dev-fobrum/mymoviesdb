@@ -9,6 +9,7 @@ import sequelize from "./instance";
 import { VerifyToken } from "./middlewares/auth.guard";
 
 import AuthRoutes from "./modules/auth/authRoutes";
+import MoviesRoutes from "./modules/movies/movieRoutes";
 import UserRoutes from "./modules/users/userRoutes";
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(AuthRoutes);
+app.use(MoviesRoutes);
 app.use(UserRoutes);
 
 app.get("/dashboard", VerifyToken, (req, res) => {

@@ -24,13 +24,11 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <SearchTools type="featured" />
-
       <GenreChips type="featured" />
 
-      <MoviesGrid title="Destaques" />
+      <MoviesGrid />
 
-      <MoviesCarrossel title="Favoritos" seeAllLink={"/favorites"} />
+      <MoviesCarrossel title="Destaques" route={apiRoutes.movies.trending} />
 
       <MoviesCarrossel title="Visto Recentemente" />
     </Container>

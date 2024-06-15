@@ -2,16 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   featuredFilters: {
-    q: "",
+    query: "",
     ordering: "Padrão",
     genres: [],
-    currentPage: 1,
+    page: 1,
   },
   favoritesFilters: {
-    q: "",
+    query: "",
     ordering: "Padrão",
     genres: [],
-    currentPage: 1,
+    page: 1,
   },
 };
 
@@ -22,7 +22,7 @@ const filtersSlice = createSlice({
     setQuerySearch(state, action) {
       state.featuredFilters = {
         ...state.featuredFilters,
-        q: action.payload,
+        query: action.payload,
       };
     },
     setOrdering(state, action) {
@@ -31,10 +31,10 @@ const filtersSlice = createSlice({
         ordering: action.payload,
       };
     },
-    setCurrentPage(state, action) {
+    setPage(state, action) {
       state.featuredFilters = {
         ...state.featuredFilters,
-        currentPage: action.payload,
+        page: action.payload,
       };
     },
     setGenres(state, action) {
@@ -45,17 +45,17 @@ const filtersSlice = createSlice({
     },
     clearFilters(state) {
       state.featuredFilters = {
-        q: "",
+        query: "",
         ordering: "Padrão",
         genres: [],
-        currentPage: 1,
+        page: 1,
       };
     },
 
     setFavoritesQuerySearch(state, action) {
       state.favoritesFilters = {
         ...state.favoritesFilters,
-        q: action.payload,
+        query: action.payload,
       };
     },
     setFavoritesOrdering(state, action) {
@@ -64,10 +64,10 @@ const filtersSlice = createSlice({
         ordering: action.payload,
       };
     },
-    setFavoritesCurrentPage(state, action) {
+    setFavoritesPage(state, action) {
       state.favoritesFilters = {
         ...state.favoritesFilters,
-        currentPage: action.payload,
+        page: action.payload,
       };
     },
     setFavoritesGenres(state, action) {
@@ -78,10 +78,10 @@ const filtersSlice = createSlice({
     },
     clearFavoritesFilters(state) {
       state.favoritesFilters = {
-        q: "",
+        query: "",
         ordering: "Padrão",
         genres: [],
-        currentPage: 1,
+        page: 1,
       };
     },
   },
@@ -90,12 +90,12 @@ const filtersSlice = createSlice({
 export const {
   setQuerySearch,
   setOrdering,
-  setCurrentPage,
+  setPage,
   setGenres,
   clearFilters,
   setFavoritesQuerySearch,
   setFavoritesOrdering,
-  setFavoritesCurrentPage,
+  setFavoritesPage,
   setFavoritesGenres,
   clearFavoritesFilters,
 } = filtersSlice.actions;

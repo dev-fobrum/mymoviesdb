@@ -22,3 +22,11 @@ body{
   background-color: rgb(97, 218, 251);
   border-color: rgb(40, 44, 52);
 }
+
+.theme-primary-color {
+  color: rgb(97, 218, 251);
+}
+
+.theme-secondary-color {
+  color: rgb(40, 44, 52);
+}

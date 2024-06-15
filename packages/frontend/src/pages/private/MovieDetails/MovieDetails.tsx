@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Container, Row, Col, Image, Card, Button } from "react-bootstrap";
 import {
   FaHeart,
@@ -9,47 +10,71 @@ import {
   FaPencilAlt,
 } from "react-icons/fa";
 
-import "./styles.css";
+import { api, apiRoutes } from "../../../services/api";
+
 import AvaliationModal from "../../../components/AvaliationModal/AvaliationModal";
 
-const movieDetails = {
-  title: "Inception",
-  year: 2010,
-  genre: "Action, Adventure, Sci-Fi",
-  duration: "2h 28min",
-  rating: "PG-13",
-  posterUrl: "https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_SY679_.jpg",
-  plot: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
-  cast: [
-    { name: "Leonardo DiCaprio", img: "https://via.placeholder.com/150" },
-    { name: "Joseph Gordon-Levitt", img: "https://via.placeholder.com/150" },
-    { name: "Elliot Page", img: "https://via.placeholder.com/150" },
-  ],
-  soundtrack: [
-    { title: "Time", length: "4:35" },
-    { title: "Dream is Collapsing", length: "2:28" },
-    { title: "Mombasa", length: "4:54" },
-  ],
-};
+import IMovie from "../../../interfaces/Movie.interface";
+import IMovieList from "../../../interfaces/MovieList.interface";
+
+import { formatDateToBR } from "../../../utils/Dates";
+
+import "./styles.css";
+import MoviesCarrossel from "../../../components/MoviesCarrossel/MoviesCarrossel";
+
+const baseImgUrl = "https://image.tmdb.org/t/p/w780/";
 
 const MovieDetails = () => {
+  const { movieId } = useParams();
+
   const [show, setShow] = useState(false);
+  const [movie, setMovie] = useState<IMovie>();
+  const [similar, setSimilar] = useState<IMovieList[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (!movieId) return;
+
+      const movie = await api.get(apiRoutes.movies.movieDetails(movieId));
+      const similar = await api.get(apiRoutes.movies.similar(movieId));
+
+      console.log("devlog similar", similar);
+
+      setMovie(movie.data);
+      setSimilar(similar.data.results);
+    }
+
+    fetchData();
+  }, [movieId]);
+
+  if (!movie || similar.length === 0) {
+    return <>teste</>;
+  }
 
   return (
     <Container className="page-movie-details">
       <Row className="mt-4">
         <Col md={4}>
-          <Image src={movieDetails.posterUrl} rounded fluid />
+          <Image src={`${baseImgUrl}${movie.poster_path}`} rounded fluid />
         </Col>
         <Col md={8}>
-          <h2>{movieDetails.title}</h2>
+          <h2>{movie.title}</h2>
           <p>
-            {movieDetails.year} | {movieDetails.genre} | {movieDetails.duration}{" "}
-            | {movieDetails.rating}
+            {formatDateToBR(movie.release_date)} |{" "}
+            {movie.genres.map((g) => g.name).join(", ")} | {movie.runtime} min.
           </p>
           <div>
             {[...Array(5)].map((_, i) => (
-              <FaStar key={i} color="gold" />
+              <span title={String(movie.vote_average)}>
+                <FaStar
+                  key={i}
+                  color={
+                    Math.floor(movie.vote_average / 2) >= i
+                      ? "rgb(97, 218, 251)"
+                      : "black"
+                  }
+                />
+              </span>
             ))}
           </div>
           <div className="mt-2">
@@ -72,14 +97,14 @@ const MovieDetails = () => {
       <Row className="mt-4">
         <Col>
           <h4>Sinopse</h4>
-          <p>{movieDetails.plot}</p>
+          <p>{movie.overview}</p>
         </Col>
       </Row>
       <Row className="mt-4">
         <Col md={8}>
           <h4>Atores</h4>
           <Row>
-            {movieDetails.cast.map((actor, index) => (
+            {[{ name: "Mock", img: "" }].map((actor, index) => (
               <Col key={index} md={4} className="text-center">
                 <Image src={actor.img} rounded fluid />
                 <p>{actor.name}</p>
@@ -90,7 +115,7 @@ const MovieDetails = () => {
         <Col md={4}>
           <h4>Trilha Sonora</h4>
           <ul className="list-unstyled">
-            {movieDetails.soundtrack.map((track, index) => (
+            {[{ title: "mock", length: "1:00" }].map((track, index) => (
               <li key={index} className="d-flex align-items-center mb-2">
                 <Button variant="light" className="me-2 theme-btn">
                   <FaPlay />
@@ -104,11 +129,9 @@ const MovieDetails = () => {
         </Col>
       </Row>
 
-      <AvaliationModal
-        movieTitle={movieDetails.title}
-        show={show}
-        setShow={setShow}
-      />
+      <MoviesCarrossel title="Você também pode gostar de..." data={similar} />
+
+      <AvaliationModal movieTitle={movie.title} show={show} setShow={setShow} />
     </Container>
   );
 };

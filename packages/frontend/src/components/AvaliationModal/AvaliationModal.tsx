@@ -47,20 +47,20 @@ const AvaliationModal: FC<AvaliationModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const response = await api.post(apiRoutes.movies.avaliate, {
-        ...formData,
-        rating,
-      });
+    // try {
+    //   const response = await api.post(apiRoutes.movies.avaliate, {
+    //     ...formData,
+    //     rating,
+    //   });
 
-      console.log(response);
+    //   console.log(response);
 
-      if (response.status === 200) {
-        handleClose();
-      }
-    } catch (error) {
-      console.error("Error creating avaliation: ", error);
-    }
+    //   if (response.status === 200) {
+    //     handleClose();
+    //   }
+    // } catch (error) {
+    //   console.error("Error creating avaliation: ", error);
+    // }
   };
 
   return (

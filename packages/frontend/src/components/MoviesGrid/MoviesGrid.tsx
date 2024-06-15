@@ -1,45 +1,73 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Carousel, Col, Container, Row, Tooltip } from "react-bootstrap";
+import { Col, Container, Row, Tooltip } from "react-bootstrap";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import { useSelector } from "react-redux";
 import { FaStar, FaCalendar } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 import Pagination from "../Pagination/Pagination";
-import { mockMovies } from "./mock";
+
+import { api, apiRoutes } from "../../services/api";
+
+import IMovieList from "../../interfaces/MovieList.interface";
+
+import { formatDateToBR } from "../../utils/Dates";
 
 import "./styles.css";
 
 interface MoviesGridInterface {
-  title: string;
+  title?: string;
 }
 
-const mockImage = "https://via.placeholder.com/100x150";
 const baseImgUrl = "https://image.tmdb.org/t/p/w780/";
-
-const SeeMore = { title: "Ver mais...", genre: "", poster_path: mockImage };
 
 const MoviesGrid: FC<MoviesGridInterface> = ({ title }) => {
   const navigate = useNavigate();
+  const filters = useSelector((state: any) => state.filters.featuredFilters);
+
+  const [movies, setMovies] = useState<IMovieList[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await api.get(apiRoutes.movies.discover, {
+        params: {
+          ...filters,
+        },
+      });
+
+      setTotalItems(response.data.total_results);
+      setMovies(response.data.results);
+    }
+
+    fetchData();
+  }, [filters]);
 
   const navigateToMovie = (movieId: number) => {
     navigate(`/moviedetails/${movieId}`);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("pt-BR");
-  };
-
   return (
-    <Container id={title}>
+    <Container>
       <Row>
         <Col>
-          <div className="display-5 mt-4 mb-3 section-title">{title}</div>
+          <div className="display-5 mt-4 mb-3 section-title d-flex justify-content-center">
+            {title}
+          </div>
         </Col>
       </Row>
 
       <Container>
         <Row>
-          {mockMovies.results.map((item, index) => {
+          {movies.length === 0 ? (
+            <div className="theme-primary-color">
+              Nenhum filme encontrado 🥺
+            </div>
+          ) : (
+            <></>
+          )}
+          {movies.map((item, index) => {
             return (
               <Col
                 className="mb-4 cursor-pointer"
@@ -72,12 +100,22 @@ const MoviesGrid: FC<MoviesGridInterface> = ({ title }) => {
                     >
                       <div className="movie-title">{item.title}</div>
                     </OverlayTrigger>
-                    <div>
-                      <FaCalendar /> {formatDate(item.release_date)}
-                    </div>
-                    <div>
-                      <FaStar /> {item.vote_average}
-                    </div>
+
+                    <Row className="d-flex flex-column w-100">
+                      <Col>
+                        <FaCalendar /> {formatDateToBR(item.release_date)}
+                      </Col>
+                      <Col>
+                        <Row className="d-flex flex-row">
+                          <Col>
+                            <FaStar /> {item.vote_average}
+                          </Col>
+                          <Col>
+                            <FaPeopleGroup /> {item.popularity}
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
                   </Col>
                 </div>
               </Col>
@@ -86,7 +124,7 @@ const MoviesGrid: FC<MoviesGridInterface> = ({ title }) => {
         </Row>
       </Container>
       <Container>
-        <Pagination itemsCount={1000} itemsPerPage={20} />
+        <Pagination itemsCount={totalItems} itemsPerPage={20} />
       </Container>
     </Container>
   );

@@ -53,7 +53,10 @@ export const apiRoutes = {
     get: "dashboard",
   },
   movies: {
-    getAvaliation: "movies",
-    avaliate: "movies/avaliate",
+    movieDetails: (movieId: number | string) => `movies/${movieId}`,
+    similar: (movieId: number | string) => `movies/similar/${movieId}`,
+    discover: "movies/discover",
+    trending: "movies/trending",
+    genres: "movies/genres",
   },
 };
