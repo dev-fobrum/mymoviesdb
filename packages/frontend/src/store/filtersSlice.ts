@@ -34,7 +34,7 @@ const filtersSlice = createSlice({
     setPage(state, action) {
       state.featuredFilters = {
         ...state.featuredFilters,
-        page: action.payload,
+        page: action?.payload || 1,
       };
     },
     setGenres(state, action) {
@@ -67,7 +67,7 @@ const filtersSlice = createSlice({
     setFavoritesPage(state, action) {
       state.favoritesFilters = {
         ...state.favoritesFilters,
-        page: action.payload,
+        page: action?.payload || 1,
       };
     },
     setFavoritesGenres(state, action) {

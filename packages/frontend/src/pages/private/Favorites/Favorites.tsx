@@ -1,15 +1,21 @@
 import React from "react";
+import { Container } from "react-bootstrap";
 
 import SearchTools from "../../../components/SearchTools/SearchTools";
 import MoviesGrid from "../../../components/MoviesGrid/MoviesGrid";
-import { Container } from "react-bootstrap";
+
+import { apiRoutes } from "../../../services/api";
 
 const Favorites: React.FC = () => {
   return (
     <Container>
       <SearchTools type="favorites" />
 
-      <MoviesGrid title="Meus Favoritos" />
+      <MoviesGrid
+        title="Meus Favoritos"
+        filter="favoritesFilters"
+        route={apiRoutes.favorites.findAll}
+      />
     </Container>
   );
 };

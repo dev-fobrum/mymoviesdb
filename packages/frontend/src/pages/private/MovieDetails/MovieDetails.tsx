@@ -9,10 +9,11 @@ import {
   FaPause,
   FaPencilAlt,
 } from "react-icons/fa";
+import { IoIosHeart, IoIosHeartDislike } from "react-icons/io";
 
 import { api, apiRoutes } from "../../../services/api";
 
-import AvaliationModal from "../../../components/AvaliationModal/AvaliationModal";
+import AvaliationModal from "../../../components/ReviewModal/ReviewModal";
 
 import IMovie from "../../../interfaces/Movie.interface";
 import IMovieList from "../../../interfaces/MovieList.interface";
@@ -30,6 +31,7 @@ const MovieDetails = () => {
   const [show, setShow] = useState(false);
   const [movie, setMovie] = useState<IMovie>();
   const [similar, setSimilar] = useState<IMovieList[]>([]);
+  const [isFavorited, setIsFavorited] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -37,18 +39,55 @@ const MovieDetails = () => {
 
       const movie = await api.get(apiRoutes.movies.movieDetails(movieId));
       const similar = await api.get(apiRoutes.movies.similar(movieId));
-
-      console.log("devlog similar", similar);
+      const favorite = await api.get(apiRoutes.favorites.findOne(movieId));
 
       setMovie(movie.data);
       setSimilar(similar.data.results);
+      setIsFavorited(favorite.data ? true : false);
+
+      await api.post(apiRoutes.lastSee.create, {
+        movieId,
+      });
     }
 
     fetchData();
   }, [movieId]);
 
-  if (!movie || similar.length === 0) {
-    return <>teste</>;
+  const handleAddFavorite = async () => {
+    try {
+      if (!movieId) return;
+
+      const response = await api.post(apiRoutes.favorites.create, {
+        movieId: movie?.id,
+        name: movie?.title,
+        releaseDate: movie?.release_date,
+        popularity: movie?.popularity,
+      });
+
+      if (response.status === 201) {
+        setIsFavorited(true);
+      }
+    } catch (error) {
+      console.error("Error adding favorites");
+    }
+  };
+
+  const handleRemoveFavorite = async () => {
+    try {
+      if (!movieId) return;
+
+      const response = await api.delete(apiRoutes.favorites.remove(movieId));
+
+      if (response.status === 200) {
+        setIsFavorited(false);
+      }
+    } catch (error) {
+      console.error("Error adding favorites");
+    }
+  };
+
+  if (!movie) {
+    return <></>;
   }
 
   return (
@@ -78,8 +117,16 @@ const MovieDetails = () => {
             ))}
           </div>
           <div className="mt-2">
-            <Button variant="light" className="me-2 theme-btn">
-              <FaHeart />
+            <Button
+              variant="light"
+              className="me-2 theme-btn"
+              onClick={
+                isFavorited
+                  ? () => handleRemoveFavorite()
+                  : () => handleAddFavorite()
+              }
+            >
+              {isFavorited ? <IoIosHeartDislike /> : <IoIosHeart />}
             </Button>
             <Button variant="light" className="me-2 theme-btn">
               <FaEye />
@@ -130,8 +177,20 @@ const MovieDetails = () => {
       </Row>
 
       <MoviesCarrossel title="Você também pode gostar de..." data={similar} />
+      {Array.isArray(similar) && similar.length === 0 ? (
+        <div className="theme-primary-color d-flex justify-content-center">
+          Nenhum filme encontrado 🥺
+        </div>
+      ) : (
+        <></>
+      )}
 
-      <AvaliationModal movieTitle={movie.title} show={show} setShow={setShow} />
+      <AvaliationModal
+        movieId={movieId}
+        movieTitle={movie.title}
+        show={show}
+        setShow={setShow}
+      />
     </Container>
   );
 };

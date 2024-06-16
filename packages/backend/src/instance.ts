@@ -1,7 +1,6 @@
 import { Sequelize } from "sequelize";
 
-const sequelize = new Sequelize(
-  "mssql://sa:My0wnStr0ngP4ssItsS3cr3t@127.0.0.1:1433/TestDB"
-);
+const connectionString: string = process.env.CONNECTION_STRING || "";
+const sequelize = new Sequelize(connectionString);
 
 export default sequelize;

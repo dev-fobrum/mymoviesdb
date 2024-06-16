@@ -149,8 +149,7 @@ const CreateUserModal = () => {
         <span>
           É novo aqui?{" "}
           <span
-            className="text-decoration-underline"
-            style={{ cursor: "pointer" }}
+            className="text-decoration-underline cursor-pointer"
             onClick={handleShow}
           >
             Faça sua conta

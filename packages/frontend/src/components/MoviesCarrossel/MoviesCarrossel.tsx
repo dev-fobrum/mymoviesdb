@@ -60,11 +60,30 @@ const MoviesCarrossel: FC<MoviesCarrosselInterface> = ({
 
       <Row>
         <Col>
+          {movies.length === 0 ? (
+            <div className="theme-primary-color d-flex justify-content-center">
+              Nenhum filme encontrado 🥺
+            </div>
+          ) : (
+            <></>
+          )}
           <Carousel
             interval={null}
             indicators={false}
-            prevIcon={<span className="prev-icon">&#10094;</span>}
-            nextIcon={<span className="next-icon">&#10095;</span>}
+            prevIcon={
+              movies.length <= 4 ? (
+                <></>
+              ) : (
+                <span className="prev-icon">&#10094;</span>
+              )
+            }
+            nextIcon={
+              movies.length <= 4 ? (
+                <></>
+              ) : (
+                <span className="next-icon">&#10095;</span>
+              )
+            }
           >
             {[...Array(Math.ceil(movies.length / 4))].map((_, index) => (
               <Carousel.Item key={index} className="cursor-pointer">
@@ -80,7 +99,7 @@ const MoviesCarrossel: FC<MoviesCarrosselInterface> = ({
                         <div>
                           <img
                             className="d-block w-100"
-                            src={`${baseImgUrl}${movie.poster_path}`}
+                            src={`${baseImgUrl}${movie?.poster_path}`}
                             alt={`Slide ${index * 4 + movieIndex}`}
                           />
                           <Col className="movie-details">

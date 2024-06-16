@@ -26,11 +26,14 @@ const Dashboard = () => {
     <Container>
       <GenreChips type="featured" />
 
-      <MoviesGrid />
+      <MoviesGrid route={apiRoutes.movies.discover} filter="featuredFilters" />
 
       <MoviesCarrossel title="Destaques" route={apiRoutes.movies.trending} />
 
-      <MoviesCarrossel title="Visto Recentemente" />
+      <MoviesCarrossel
+        title="Visto Recentemente"
+        route={apiRoutes.lastSee.findAll}
+      />
     </Container>
   );
 };

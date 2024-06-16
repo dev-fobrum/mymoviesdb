@@ -18,7 +18,7 @@ api.interceptors.request.use(
     return config;
   },
   (error: any) => {
-    console.log("error", error);
+    console.error("error", error);
     return Promise.reject(error);
   }
 );
@@ -33,7 +33,7 @@ api.interceptors.response.use(
     return response;
   },
   (error: any) => {
-    console.log("error", error);
+    console.error("error", error);
     if (error?.response?.status == 401) store.dispatch(logout());
     return Promise.reject(error);
   }
@@ -58,5 +58,23 @@ export const apiRoutes = {
     discover: "movies/discover",
     trending: "movies/trending",
     genres: "movies/genres",
+  },
+  favorites: {
+    findAll: "favorites",
+    findOne: (movieId: number | string) => `favorites/${movieId}`,
+    create: "favorites",
+    remove: (movieId: number | string) => `favorites/${movieId}`,
+  },
+  lastSee: {
+    findAll: "lastsee",
+    create: "lastsee",
+  },
+  review: {
+    findAll: "reviews",
+    create: "reviews",
+    update: (reviewId: number | string) => `reviews/${reviewId}`,
+    delete: (reviewId: number | string) => `reviews/${reviewId}`,
+    findOne: (reviewId: number | string) => `reviews/${reviewId}`,
+    findByUser: (movieId: number | string) => `reviews/movie/${movieId}`,
   },
 };

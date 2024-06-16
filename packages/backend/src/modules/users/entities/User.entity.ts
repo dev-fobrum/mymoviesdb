@@ -1,5 +1,4 @@
-// models/User.entity.ts
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from "../../../instance";
 
 class User extends Model {

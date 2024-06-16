@@ -2,31 +2,10 @@ import axios from "axios";
 
 import DiscoverDto from "../dtos/Discover.dto";
 
+import { fromToOrdering } from "../../../utils/FromToOrdering";
+
 export class DiscoverUseCase {
-  fromToOrdering(from: string) {
-    let to: string = "";
-    switch (from) {
-      case "Título (A-Z)":
-        to = "title.asc";
-        break;
-      case "Título (Z-A)":
-        to = "title.desc";
-        break;
-      case "Popularidade":
-        to = "popularity.desc";
-        break;
-      case "Data de Lançamento":
-        to = "primary_release_date.desc";
-        break;
-      default:
-        to = "popularity.desc";
-    }
-
-    return to;
-  }
-
   async execute(query: DiscoverDto): Promise<any> {
-    console.log("devlog query", query);
     const response = await axios.get(
       `${process.env.TMDB_BASE_URL}/discover/movie`,
       {
@@ -42,7 +21,7 @@ export class DiscoverUseCase {
             query: query.query,
           }),
           ...(query?.ordering && {
-            sort_by: this.fromToOrdering(query.ordering),
+            sort_by: fromToOrdering(query.ordering),
           }),
           ...(query?.genres && {
             with_genres: query.genres.join(","),

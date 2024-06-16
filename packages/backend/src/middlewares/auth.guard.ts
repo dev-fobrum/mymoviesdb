@@ -24,8 +24,6 @@ export const VerifyToken = (
         return res.status(401).json({ message: "Token inválido" });
       }
 
-      console.log("devlog decoded", decoded);
-
       (req as RequestWithJwt).userId = decoded?.id;
 
       next();

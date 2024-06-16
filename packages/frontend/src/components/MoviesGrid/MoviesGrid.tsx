@@ -8,7 +8,7 @@ import { FaPeopleGroup } from "react-icons/fa6";
 
 import Pagination from "../Pagination/Pagination";
 
-import { api, apiRoutes } from "../../services/api";
+import { api } from "../../services/api";
 
 import IMovieList from "../../interfaces/MovieList.interface";
 
@@ -18,20 +18,22 @@ import "./styles.css";
 
 interface MoviesGridInterface {
   title?: string;
+  filter: string;
+  route: string;
 }
 
 const baseImgUrl = "https://image.tmdb.org/t/p/w780/";
 
-const MoviesGrid: FC<MoviesGridInterface> = ({ title }) => {
+const MoviesGrid: FC<MoviesGridInterface> = ({ title, filter, route }) => {
   const navigate = useNavigate();
-  const filters = useSelector((state: any) => state.filters.featuredFilters);
+  const filters = useSelector((state: any) => state.filters[filter]);
 
   const [movies, setMovies] = useState<IMovieList[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await api.get(apiRoutes.movies.discover, {
+      const response = await api.get(route, {
         params: {
           ...filters,
         },
@@ -61,7 +63,7 @@ const MoviesGrid: FC<MoviesGridInterface> = ({ title }) => {
       <Container>
         <Row>
           {movies.length === 0 ? (
-            <div className="theme-primary-color">
+            <div className="theme-primary-color d-flex justify-content-center">
               Nenhum filme encontrado 🥺
             </div>
           ) : (
@@ -81,8 +83,11 @@ const MoviesGrid: FC<MoviesGridInterface> = ({ title }) => {
                 <div>
                   <img
                     className="d-block w-100"
-                    src={`${baseImgUrl}${item.backdrop_path}`}
+                    src={`${baseImgUrl}${
+                      item?.backdrop_path || item.poster_path
+                    }`}
                     alt={`Slide ${index * 4 + index}`}
+                    height={140}
                   />
                   <Col className="movie-details">
                     <OverlayTrigger
@@ -124,7 +129,14 @@ const MoviesGrid: FC<MoviesGridInterface> = ({ title }) => {
         </Row>
       </Container>
       <Container>
-        <Pagination itemsCount={totalItems} itemsPerPage={20} />
+        {/** TMDB só fornece páginação para os primeiros 20.000 items
+         * 20.000 / 20 por pag. = 10.000 = itemsCount
+         */}
+        <Pagination
+          itemsCount={filter === "featuredFilters" ? 10000 : totalItems}
+          itemsPerPage={20}
+          filter={filter}
+        />
       </Container>
     </Container>
   );

@@ -22,7 +22,7 @@ router.get("/movies/genres", VerifyToken, (req, res) =>
   moviesController.findGenres(req, res)
 );
 
-router.get("movies/similar/:id", VerifyToken, (req, res) =>
+router.get("/movies/similar/:id", VerifyToken, (req, res) =>
   moviesController.findSimilar(req, res)
 );
 

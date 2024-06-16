@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import Pagination from "react-bootstrap/Pagination";
 
-import { setPage } from "../../store/filtersSlice";
+import { setPage, setFavoritesPage } from "../../store/filtersSlice";
 
 import "./styles.css";
 
@@ -16,16 +16,18 @@ const scrollToTop = () =>
 interface MoviesPaginationProps {
   itemsCount: number;
   itemsPerPage: number;
+  filter: string;
 }
 
 const MoviesPagination: React.FC<MoviesPaginationProps> = ({
   itemsCount,
   itemsPerPage,
+  filter,
 }) => {
+  const filters = useSelector((state: any) => state.filters[filter]);
+
   const dispatch = useDispatch();
-  const currentPage = useSelector(
-    (state: any) => state.filters.featuredFilters.page
-  );
+  const currentPage = useSelector((state: any) => state.filters[filter].page);
 
   const pagesCount = Math.ceil(itemsCount / itemsPerPage);
   const isCurrentPageFirst = currentPage === 1;
@@ -33,7 +35,12 @@ const MoviesPagination: React.FC<MoviesPaginationProps> = ({
 
   const changePage = (number: number) => {
     if (currentPage === number) return;
+
     dispatch(setPage(number));
+
+    filter === "featuredFilters"
+      ? dispatch(setPage(number))
+      : dispatch(setFavoritesPage(number));
     scrollToTop();
   };
 
@@ -51,7 +58,9 @@ const MoviesPagination: React.FC<MoviesPaginationProps> = ({
 
   const setLastPageAsCurrent = () => {
     if (currentPage > pagesCount) {
-      dispatch(setPage(pagesCount));
+      filter === "featuredFilters"
+        ? dispatch(setPage(pagesCount))
+        : dispatch(setFavoritesPage(pagesCount));
     }
   };
 

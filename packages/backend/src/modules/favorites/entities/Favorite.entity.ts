@@ -1,0 +1,55 @@
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../../../instance";
+
+class Favorite extends Model {
+  public id!: number;
+  public userId!: number;
+  public movieId!: number;
+  public name!: string;
+  public releaseDate!: Date;
+  public popularity!: number;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+Favorite.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+    },
+    movieId: {
+      type: DataTypes.INTEGER,
+    },
+    name: {
+      type: DataTypes.STRING,
+    },
+    releaseDate: {
+      type: DataTypes.DATE,
+    },
+    popularity: {
+      type: DataTypes.INTEGER,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    sequelize,
+    modelName: "Favorite",
+    tableName: "favorites",
+  }
+);
+
+export default Favorite;
