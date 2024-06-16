@@ -28,3 +28,24 @@
     text-overflow: ellipsis;
     max-width: 200px;
 }
+
+.search-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    width: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    transition: width 0.5s, opacity 0.5s;
+    margin-left: 0;
+  }
+  
+  .search-input:focus {
+    width: 200px;
+    opacity: 1;
+    padding: 12px;
+    margin-left: 10px;
+  }

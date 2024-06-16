@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Image, Card, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  Card,
+  Button,
+  Spinner,
+} from "react-bootstrap";
 import {
   FaHeart,
   FaEye,
@@ -14,6 +22,8 @@ import { IoIosHeart, IoIosHeartDislike } from "react-icons/io";
 import { api, apiRoutes } from "../../../services/api";
 
 import AvaliationModal from "../../../components/ReviewModal/ReviewModal";
+import MoviesCarrossel from "../../../components/MoviesCarrossel/MoviesCarrossel";
+import MovieCredits from "../../../components/MovieCredits/MovieCredits";
 
 import IMovie from "../../../interfaces/Movie.interface";
 import IMovieList from "../../../interfaces/MovieList.interface";
@@ -21,7 +31,7 @@ import IMovieList from "../../../interfaces/MovieList.interface";
 import { formatDateToBR } from "../../../utils/Dates";
 
 import "./styles.css";
-import MoviesCarrossel from "../../../components/MoviesCarrossel/MoviesCarrossel";
+import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 
 const baseImgUrl = "https://image.tmdb.org/t/p/w780/";
 
@@ -32,22 +42,32 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState<IMovie>();
   const [similar, setSimilar] = useState<IMovieList[]>([]);
   const [isFavorited, setIsFavorited] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       if (!movieId) return;
 
-      const movie = await api.get(apiRoutes.movies.movieDetails(movieId));
-      const similar = await api.get(apiRoutes.movies.similar(movieId));
-      const favorite = await api.get(apiRoutes.favorites.findOne(movieId));
+      setLoading(true);
 
-      setMovie(movie.data);
-      setSimilar(similar.data.results);
-      setIsFavorited(favorite.data ? true : false);
+      try {
+        const [movie, similar, favorite] = await Promise.all([
+          api.get(apiRoutes.movies.movieDetails(movieId)),
+          api.get(apiRoutes.movies.similar(movieId)),
+          api.get(apiRoutes.favorites.findOne(movieId)),
+          api.post(apiRoutes.lastSee.create, {
+            movieId,
+          }),
+        ]);
 
-      await api.post(apiRoutes.lastSee.create, {
-        movieId,
-      });
+        setMovie(movie.data);
+        setSimilar(similar.data.results);
+        setIsFavorited(favorite.data ? true : false);
+      } catch (error) {
+        console.error("Erro ao buscar os dados:", error);
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchData();
@@ -82,12 +102,12 @@ const MovieDetails = () => {
         setIsFavorited(false);
       }
     } catch (error) {
-      console.error("Error adding favorites");
+      console.error("Error removing favorites");
     }
   };
 
-  if (!movie) {
-    return <></>;
+  if (loading || !movie) {
+    return <LoadingSpinner />;
   }
 
   return (
@@ -104,9 +124,8 @@ const MovieDetails = () => {
           </p>
           <div>
             {[...Array(5)].map((_, i) => (
-              <span title={String(movie.vote_average)}>
+              <span title={`${String(movie.vote_average)}/10`} key={i}>
                 <FaStar
-                  key={i}
                   color={
                     Math.floor(movie.vote_average / 2) >= i
                       ? "rgb(97, 218, 251)"
@@ -128,9 +147,6 @@ const MovieDetails = () => {
             >
               {isFavorited ? <IoIosHeartDislike /> : <IoIosHeart />}
             </Button>
-            <Button variant="light" className="me-2 theme-btn">
-              <FaEye />
-            </Button>
             <Button
               variant="light"
               className="me-2 theme-btn"
@@ -149,15 +165,14 @@ const MovieDetails = () => {
       </Row>
       <Row className="mt-4">
         <Col md={8}>
-          <h4>Atores</h4>
-          <Row>
-            {[{ name: "Mock", img: "" }].map((actor, index) => (
-              <Col key={index} md={4} className="text-center">
-                <Image src={actor.img} rounded fluid />
-                <p>{actor.name}</p>
-              </Col>
-            ))}
-          </Row>
+          {movieId ? (
+            <MovieCredits
+              route={apiRoutes.movies.credits(movieId)}
+              key={movieId}
+            />
+          ) : (
+            <></>
+          )}
         </Col>
         <Col md={4}>
           <h4>Trilha Sonora</h4>
@@ -176,14 +191,12 @@ const MovieDetails = () => {
         </Col>
       </Row>
 
-      <MoviesCarrossel title="Você também pode gostar de..." data={similar} />
-      {Array.isArray(similar) && similar.length === 0 ? (
-        <div className="theme-primary-color d-flex justify-content-center">
-          Nenhum filme encontrado 🥺
-        </div>
-      ) : (
-        <></>
-      )}
+      <MoviesCarrossel
+        key={movieId}
+        title="Você também pode gostar de..."
+        data={similar}
+        autoScroll
+      />
 
       <AvaliationModal
         movieId={movieId}

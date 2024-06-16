@@ -42,33 +42,33 @@ const ReviewModal: FC<ReviewModalProps> = ({
   };
 
   useEffect(() => {
-    async function fetchData() {
-      if (!id) {
-        if (!movieId) return;
+    async function fetchReviewData() {
+      try {
+        const movieIdToUse = movieId || params?.movieId || "";
+        const reviewIdToUse = reviewId || movieIdToUse;
 
-        const response = await api.get(apiRoutes.review.findByUser(movieId));
+        if (!reviewIdToUse) return;
 
-        setId(response.data.id);
-        setRating(response.data.rating);
-        setRatingDate(response.data.updatedAt);
-        setFormData({
-          opinion: response.data.opinion,
-        });
+        const endpoint = reviewId
+          ? apiRoutes.review.findOne(reviewIdToUse)
+          : apiRoutes.review.findByUser(movieIdToUse);
 
-        return;
+        const response = await api.get(endpoint);
+
+        if (response?.data) {
+          const { id, rating, updatedAt, opinion } = response.data;
+          setId(id);
+          setRating(rating);
+          setRatingDate(updatedAt);
+          setFormData({ opinion });
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados da avaliação:", error);
       }
-
-      const response = await api.get(apiRoutes.review.findOne(id));
-
-      setRating(response.data.rating);
-      setRatingDate(response.data.updatedAt);
-      setFormData({
-        opinion: response.data.opinion,
-      });
     }
 
-    fetchData();
-  }, [reviewId]);
+    fetchReviewData();
+  }, [reviewId, movieId, params.movieId]);
 
   /**
    * Handle input change
@@ -97,8 +97,6 @@ const ReviewModal: FC<ReviewModalProps> = ({
       }
 
       let status: number;
-
-      console.log("devlog id", id);
 
       if (id) {
         const response = await api.put(apiRoutes.review.update(id), {

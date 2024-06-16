@@ -53,11 +53,19 @@ export const apiRoutes = {
     get: "dashboard",
   },
   movies: {
+    actorDetails: (actorId: number | string) => `movies/actor/${actorId}`,
+    actorMovies: (actorId: number | string) => `movies/actormovies/${actorId}`,
     movieDetails: (movieId: number | string) => `movies/${movieId}`,
+    credits: (movieId: number | string) => `movies/credits/${movieId}`,
     similar: (movieId: number | string) => `movies/similar/${movieId}`,
+    search: (query: number | string) => `movies/search/?name=${query}`,
     discover: "movies/discover",
     trending: "movies/trending",
     genres: "movies/genres",
+  },
+  persons: {
+    actorDetails: (actorId: number | string) => `persons/${actorId}`,
+    actorMovies: (actorId: number | string) => `persons/movies/${actorId}`,
   },
   favorites: {
     findAll: "favorites",

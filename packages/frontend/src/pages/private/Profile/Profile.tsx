@@ -52,7 +52,7 @@ const Profile = () => {
         setFormData(response.data);
       } catch (error) {
         setLoading(false);
-        console.log("devlog error", error);
+        console.error("devlog error", error);
       }
     }
 

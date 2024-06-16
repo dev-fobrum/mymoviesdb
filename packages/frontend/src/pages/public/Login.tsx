@@ -8,7 +8,11 @@ import { api, apiRoutes } from "../../services/api";
 import Logo from "../../components/Logo/Logo";
 import SignUpModal from "../../components/SignUpModal/SignUpModal";
 
-import { clearFilters, clearFavoritesFilters } from "../../store/filtersSlice";
+import {
+  clearFilters,
+  clearFavoritesFilters,
+  clearSearchFilters,
+} from "../../store/filtersSlice";
 
 import "./styles.css";
 
@@ -27,6 +31,7 @@ const Login = () => {
   useEffect(() => {
     dispatch(clearFilters());
     dispatch(clearFavoritesFilters());
+    dispatch(clearSearchFilters());
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

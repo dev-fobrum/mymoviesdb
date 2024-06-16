@@ -1,20 +1,23 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Carousel, Col, Container, Row, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { FaStar, FaCalendar } from "react-icons/fa";
 
 import IMovieList from "../../interfaces/MovieList.interface";
-
+import { api } from "../../services/api";
+import { scrollToTop } from "../../utils/scrollToTop";
 import { formatDateToBR } from "../../utils/Dates";
 
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+
 import "./styles.css";
-import { api } from "../../services/api";
 
 interface MoviesCarrosselInterface {
   title: string;
   route?: string;
   data?: IMovieList[];
+  autoScroll?: boolean;
 }
 
 const baseImgUrl = "https://image.tmdb.org/t/p/w780/";
@@ -23,30 +26,45 @@ const MoviesCarrossel: FC<MoviesCarrosselInterface> = ({
   title,
   route,
   data,
+  autoScroll,
 }) => {
   const navigate = useNavigate();
 
   const [movies, setMovies] = useState<IMovieList[]>(data ? data : []);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       if (!route) return;
 
-      const response = await api.get(route, {
-        params: {
-          page: 1,
-        },
-      });
+      try {
+        setLoading(true);
 
-      setMovies(response.data.results);
+        const response = await api.get(route, {
+          params: {
+            page: 1,
+          },
+        });
+
+        setMovies(response.data.results);
+      } catch (error) {
+        console.error("Erro ao buscar os dados:", error);
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchData();
-  }, []);
+  }, [route]);
 
   const navigateToMovie = (movieId: number) => {
     navigate(`/moviedetails/${movieId}`);
+    autoScroll && scrollToTop();
   };
+
+  if (loading && !data) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <Container id={title}>
@@ -59,14 +77,11 @@ const MoviesCarrossel: FC<MoviesCarrosselInterface> = ({
       </Row>
 
       <Row>
-        <Col>
-          {movies.length === 0 ? (
-            <div className="theme-primary-color d-flex justify-content-center">
-              Nenhum filme encontrado 🥺
-            </div>
-          ) : (
-            <></>
-          )}
+        {movies.length === 0 ? (
+          <div className="theme-primary-color d-flex justify-content-center">
+            Nenhum filme encontrado 🥺
+          </div>
+        ) : (
           <Carousel
             interval={null}
             indicators={false}
@@ -108,8 +123,7 @@ const MoviesCarrossel: FC<MoviesCarrosselInterface> = ({
                               overlay={
                                 <Tooltip
                                   style={{
-                                    position:
-                                      "absolute" /** Havia um erro de barra vertical e foi necessário essa correção */,
+                                    position: "absolute",
                                   }}
                                 >
                                   {movie.title}
@@ -133,7 +147,7 @@ const MoviesCarrossel: FC<MoviesCarrosselInterface> = ({
               </Carousel.Item>
             ))}
           </Carousel>
-        </Col>
+        )}
       </Row>
     </Container>
   );

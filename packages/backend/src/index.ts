@@ -12,6 +12,7 @@ import AuthRoutes from "./modules/auth/authRoutes";
 import FavoritesRoutes from "./modules/favorites/favoriteRoutes";
 import LastSeeRoutes from "./modules/lastSee/lastSeeRoutes";
 import MoviesRoutes from "./modules/movies/movieRoutes";
+import PersonsRoutes from "./modules/persons/personsRoutes";
 import ReviewRoutes from "./modules/reviews/reviewRoutes";
 import UserRoutes from "./modules/users/userRoutes";
 
@@ -33,6 +34,7 @@ app.use(AuthRoutes);
 app.use(FavoritesRoutes);
 app.use(LastSeeRoutes);
 app.use(MoviesRoutes);
+app.use(PersonsRoutes);
 app.use(ReviewRoutes);
 app.use(UserRoutes);
 

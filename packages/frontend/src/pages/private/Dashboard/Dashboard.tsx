@@ -6,7 +6,6 @@ import { api, apiRoutes } from "../../../services/api";
 import GenreChips from "../../../components/GenreChips/GenreChips";
 import MoviesCarrossel from "../../../components/MoviesCarrossel/MoviesCarrossel";
 import MoviesGrid from "../../../components/MoviesGrid/MoviesGrid";
-import SearchTools from "../../../components/SearchTools/SearchTools";
 
 import "./styles.css";
 
@@ -24,7 +23,7 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <GenreChips type="featured" />
+      <GenreChips type="featuredFilters" />
 
       <MoviesGrid route={apiRoutes.movies.discover} filter="featuredFilters" />
 

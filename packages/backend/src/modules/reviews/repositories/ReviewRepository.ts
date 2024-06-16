@@ -36,7 +36,6 @@ export class ReviewRepository implements IReviewRepository {
     movieId: number,
     userId: number
   ): Promise<ReviewEntity | null> {
-    console.log("devlog movieId", { movieId, userId });
     const review = await ReviewEntity.findOne({
       where: {
         movieId,

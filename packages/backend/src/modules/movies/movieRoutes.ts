@@ -22,6 +22,14 @@ router.get("/movies/genres", VerifyToken, (req, res) =>
   moviesController.findGenres(req, res)
 );
 
+router.get("/movies/search", VerifyToken, (req, res) =>
+  moviesController.searchMovie(req, res)
+);
+
+router.get("/movies/credits/:id", VerifyToken, (req, res) =>
+  moviesController.findCredits(req, res)
+);
+
 router.get("/movies/similar/:id", VerifyToken, (req, res) =>
   moviesController.findSimilar(req, res)
 );

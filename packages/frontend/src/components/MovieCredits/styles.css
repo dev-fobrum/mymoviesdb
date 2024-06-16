@@ -1,0 +1,52 @@
+.prev-icon,
+.next-icon {
+  position: absolute;
+  transform: translateY(-50%);
+  color: rgb(40, 44, 52);
+  background-color: rgb(97, 218, 251);
+  padding: 10px;
+  border-radius: 20%;
+  cursor: pointer;
+  font-size: 20px;
+  width: 30px;
+}
+
+.carousel-control-next, .carousel-control-prev {
+  width: 0;
+}
+
+.prev-icon {
+  left: -40px;
+}
+
+.next-icon {
+  right: -40px;
+}
+
+.cast-character {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    color: rgb(40, 44, 52);
+    width: 100%;
+    font-weight: 500;
+    padding: 5px;
+}
+
+.cast-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 12px;
+
+  color: rgb(40, 44, 52);
+  background-color: rgba(97, 218, 251, 0.7);
+  width: 100%;
+  font-weight: 500;
+  padding: 5px;
+}

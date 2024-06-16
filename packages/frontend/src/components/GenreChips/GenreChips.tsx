@@ -15,10 +15,13 @@ import CustomCheckbox from "./CustomCheckbox";
 import {
   setGenres,
   setFavoritesGenres,
+  setSearchGenres,
   setOrdering,
   setFavoritesOrdering,
+  setSearchOrdering,
   clearFilters,
   clearFavoritesFilters,
+  clearSearchFilters,
 } from "../../store/filtersSlice";
 import { api, apiRoutes } from "../../services/api";
 
@@ -32,11 +35,48 @@ interface GenreFilterProps {
 const GenreFilter: FC<GenreFilterProps> = ({ type }) => {
   const dispatch = useDispatch();
 
-  const featuredFilters = useSelector((state: any) =>
-    type === "featured"
-      ? state.filters.featuredFilters
-      : state.filters.favoritesFilters
-  );
+  const featuredFilters = useSelector((state: any) => state.filters[type]);
+
+  const switchDispatcher = (value: any, action = "") => {
+    switch (action) {
+      case "genre":
+        switch (type) {
+          case "featuredFilters":
+            dispatch(setGenres(value));
+            break;
+          case "favoritesFilters":
+            dispatch(setFavoritesGenres(value));
+            break;
+          case "searchFilters":
+            dispatch(setSearchGenres(value));
+        }
+        break;
+      case "ordering":
+        switch (type) {
+          case "featuredFilters":
+            dispatch(setOrdering(value));
+            break;
+          case "favoritesFilters":
+            dispatch(setFavoritesOrdering(value));
+            break;
+          case "searchFilters":
+            dispatch(setSearchOrdering(value));
+        }
+        break;
+      case "clear":
+        switch (type) {
+          case "featuredFilters":
+            dispatch(clearFilters());
+            break;
+          case "favoritesFilters":
+            dispatch(clearFavoritesFilters());
+            break;
+          case "searchFilters":
+            dispatch(clearSearchFilters());
+        }
+        break;
+    }
+  };
 
   const [availableGenres, setAvailableGenres] = useState<Genre[]>([]);
 
@@ -55,9 +95,7 @@ const GenreFilter: FC<GenreFilterProps> = ({ type }) => {
       ? featuredFilters.genres.filter((item: number) => item !== genre)
       : [...featuredFilters.genres, genre];
 
-    type === "featured"
-      ? dispatch(setGenres(updatedGenres))
-      : dispatch(setFavoritesGenres(updatedGenres));
+    switchDispatcher(updatedGenres, "genre");
 
     return true;
   };
@@ -65,15 +103,11 @@ const GenreFilter: FC<GenreFilterProps> = ({ type }) => {
   const handleOrdenationChange = (e: string | null) => {
     if (!e) return;
 
-    type === "featured"
-      ? dispatch(setOrdering(e))
-      : dispatch(setFavoritesOrdering(e));
+    switchDispatcher(e, "ordering");
   };
 
   const handleClearFilters = () => {
-    type === "featured"
-      ? dispatch(clearFilters())
-      : dispatch(clearFavoritesFilters());
+    switchDispatcher("", "clear");
   };
 
   return (

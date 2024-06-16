@@ -13,6 +13,12 @@ const initialState = {
     genres: [],
     page: 1,
   },
+  searchFilters: {
+    query: "",
+    ordering: "Padrão",
+    genres: [],
+    page: 1,
+  },
 };
 
 const filtersSlice = createSlice({
@@ -20,6 +26,7 @@ const filtersSlice = createSlice({
   initialState,
   reducers: {
     setQuerySearch(state, action) {
+      console.log("devlog setQuerySearch", state);
       state.featuredFilters = {
         ...state.featuredFilters,
         query: action.payload,
@@ -52,6 +59,7 @@ const filtersSlice = createSlice({
       };
     },
 
+    /** Favorites */
     setFavoritesQuerySearch(state, action) {
       state.favoritesFilters = {
         ...state.favoritesFilters,
@@ -84,6 +92,41 @@ const filtersSlice = createSlice({
         page: 1,
       };
     },
+
+    /** Search */
+    setSearchQuerySearch(state, action) {
+      console.log("devlog setSearchQuerySearch", state);
+      state.searchFilters = {
+        ...state.searchFilters,
+        query: action.payload,
+      };
+    },
+    setSearchOrdering(state, action) {
+      state.searchFilters = {
+        ...state.searchFilters,
+        ordering: action.payload,
+      };
+    },
+    setSearchPage(state, action) {
+      state.searchFilters = {
+        ...state.searchFilters,
+        page: action?.payload || 1,
+      };
+    },
+    setSearchGenres(state, action) {
+      state.searchFilters = {
+        ...state.searchFilters,
+        genres: action.payload,
+      };
+    },
+    clearSearchFilters(state) {
+      state.searchFilters = {
+        query: "",
+        ordering: "Padrão",
+        genres: [],
+        page: 1,
+      };
+    },
   },
 });
 
@@ -98,6 +141,11 @@ export const {
   setFavoritesPage,
   setFavoritesGenres,
   clearFavoritesFilters,
+  setSearchQuerySearch,
+  setSearchOrdering,
+  setSearchPage,
+  setSearchGenres,
+  clearSearchFilters,
 } = filtersSlice.actions;
 
 export default filtersSlice.reducer;
