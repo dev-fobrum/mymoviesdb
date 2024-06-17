@@ -40,8 +40,7 @@ app.use(UserRoutes);
 
 app.get("/dashboard", VerifyToken, (req, res) => {
   res.json({
-    message: "Rota protegida. Informações do usuário:",
-    user: 1,
+    message: "",
   });
 });
 

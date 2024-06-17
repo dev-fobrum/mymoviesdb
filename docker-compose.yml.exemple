@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  dbmmdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: ""
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    networks:
+      - my-network
+    volumes:
+      - ./docker/sqlserver/scripts:/docker-entrypoint-initdb.d
+
+  backend-mmdb:
+    restart: 'on-failure'
+    build:
+      context: ./packages/backend
+    ports:
+      - "3001:3001"
+    networks:
+      - my-network
+    environment:
+      DB_USER: ""
+      DB_PASS: ""
+      DB_NAME: ""
+      DB_HOST: ""
+      DB_PORT: 1433
+      DB_DIALECT: ""
+      PORT: 3001
+      CORS_URL: ''
+      CONNECTION_STRING: ''
+      SECRET_KEY: ''
+      TMDB_JWT_TOKEN: ''
+      TMDB_API_KEY: ''
+      TMDB_BASE_URL: ''
+    depends_on:
+      - dbmmdb
+
+  frontend-mmdb:
+    build:
+      context: ./packages/frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
+    depends_on:
+      - backend-mmdb
+
+networks:
+  my-network:
+    driver: bridge

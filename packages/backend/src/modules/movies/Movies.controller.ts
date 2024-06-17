@@ -110,7 +110,6 @@ export class MoviesController {
       };
 
       const response = await this.searchMovieUseCase.execute(query);
-      console.log("devlog query", query);
 
       res.json(response.data);
     } catch (error) {

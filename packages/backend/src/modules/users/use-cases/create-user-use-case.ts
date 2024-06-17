@@ -35,7 +35,7 @@ export class CreateUserUseCase {
     });
 
     try {
-      await enviarEmailBoasVindas(body.email);
+      // await enviarEmailBoasVindas(body.email);
     } catch (error) {
       console.error("Erro ao enviar email de boas-vindas:", error);
     } finally {

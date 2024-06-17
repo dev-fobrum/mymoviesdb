@@ -15,3 +15,6 @@ Thumbs.db
 
 # Environment variables
 .env
+
+*.yml
+/docker/sqlserver/Dockerfile.sqlserver
