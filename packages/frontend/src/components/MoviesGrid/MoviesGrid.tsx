@@ -54,7 +54,7 @@ const MoviesGrid: FC<MoviesGridInterface> = ({ title, filter, route }) => {
   }, [filters, route]);
 
   useEffect(() => {
-    fetchData();
+    if (loading) fetchData();
   }, [fetchData]);
 
   const navigateToMovie = (movieId: number) => {
