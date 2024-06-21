@@ -4,7 +4,8 @@ import FavoriteEntity from "../entities/Favorite.entity";
 
 export interface IFavoriteRepository {
   findAll(
-    query: FindAllDto
+    query: FindAllDto,
+    userId: number
   ): Promise<{ data: FavoriteEntity[]; count: number }>;
   findOne(movieId: number, userId: number): Promise<FavoriteEntity | null>;
   create(body: CreateFavoriteDto, userId: number): Promise<FavoriteEntity>;

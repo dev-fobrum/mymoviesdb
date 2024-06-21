@@ -20,6 +20,7 @@ export class FavoriteController {
 
   async findAll(req: RequestWithJwt, res: Response): Promise<any> {
     try {
+      const userId: number | undefined = req?.userId;
       const query: FindAllDto = {
         page: parseInt(req.query.page as string, 10),
         query: req.query.query as string,
@@ -27,7 +28,12 @@ export class FavoriteController {
         // genres: req.query.genres as string[],
       };
 
-      const favorites = await this.findAllUseCase.execute(query);
+      if (!userId) {
+        res.status(500).json({ error: "User is required" });
+        return;
+      }
+
+      const favorites = await this.findAllUseCase.execute(query, userId);
       res.json(favorites);
     } catch (error: any) {
       console.error("Error finding favorites:", error);
