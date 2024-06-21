@@ -5,8 +5,11 @@ import { ILastSeeRepository } from "../interfaces/LastSeeRepository.interface";
 import LastSee from "../entities/LastSee.entity";
 
 export class LastSeeRepository implements ILastSeeRepository {
-  async findAll(): Promise<LastSeeEntity[]> {
+  async findAll(userId: number): Promise<LastSeeEntity[]> {
     const lastSee = await LastSeeEntity.findAll({
+      where: {
+        userId,
+      },
       attributes: ["userId", "movieId"],
       raw: true,
       group: ["userId", "movieId"],

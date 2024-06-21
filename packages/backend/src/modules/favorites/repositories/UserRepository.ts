@@ -11,12 +11,14 @@ import { fromToSequelizeOrder } from "../../../utils/FromToOrdering";
 
 export class FavoriteRepository implements IFavoriteRepository {
   async findAll(
-    query: FindAllDto
+    query: FindAllDto,
+    userId: number
   ): Promise<{ data: FavoriteEntity[]; count: number }> {
     const orderOpts = fromToSequelizeOrder(query?.ordering);
 
     const count = await FavoriteEntity.count({
       where: {
+        userId,
         ...(query.query && {
           name: { [Op.like]: `%${query.query}%` },
         }),
@@ -25,6 +27,7 @@ export class FavoriteRepository implements IFavoriteRepository {
 
     const favorites = await FavoriteEntity.findAll({
       where: {
+        userId,
         ...(query.query && {
           name: { [Op.like]: `%${query.query}%` },
         }),

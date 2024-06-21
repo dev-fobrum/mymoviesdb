@@ -17,7 +17,14 @@ export class LastSeeController {
 
   async findAll(req: RequestWithJwt, res: Response): Promise<any> {
     try {
-      const favorites = await this.findAllUseCase.execute();
+      const userId: number | undefined = req?.userId;
+
+      if (!userId) {
+        res.status(500).json({ error: "User is required" });
+        return;
+      }
+
+      const favorites = await this.findAllUseCase.execute(userId);
       res.json(favorites);
     } catch (error: any) {
       console.error("Error finding favorites:", error);

@@ -26,8 +26,8 @@ export class FindAllUseCase {
     );
   }
 
-  async execute(): Promise<any> {
-    const lastSee = await this.lastSeeRepository.findAll();
+  async execute(userId: number): Promise<any> {
+    const lastSee = await this.lastSeeRepository.findAll(userId);
 
     const results = await this.formatFavorite(lastSee);
 

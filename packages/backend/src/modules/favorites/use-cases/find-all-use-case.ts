@@ -26,8 +26,8 @@ export class FindAllUseCase {
     );
   }
 
-  async execute(query: FindAllDto): Promise<any> {
-    const favorites = await this.favoriteRepository.findAll(query);
+  async execute(query: FindAllDto, userId: number): Promise<any> {
+    const favorites = await this.favoriteRepository.findAll(query, userId);
 
     const results = await this.formatFavorite(favorites.data);
 
